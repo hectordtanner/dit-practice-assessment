@@ -17,9 +17,9 @@ class GatherDataGUi:
         self.display_data_frame = Frame(parent)
         self.get_data_frame.pack()
 
-        self.display_label = Label(self.get_data_frame, text="Collecting Person Data")
-        self.display_button = Button(self.get_data_frame, text="Show All", command=self.display)
-        self.display_label.grid(column=0, row=0)
+        self.add_data_label = Label(self.get_data_frame, text="Collecting Person Data")
+        self.display_button = Button(self.get_data_frame, text="Show All", command=self.switch_to_display)
+        self.add_data_label.grid(column=0, row=0)
         self.display_button.grid(column=1, row=0)
 
         self.name_entry_label = Label(self.get_data_frame, text="First name:")
@@ -42,10 +42,41 @@ class GatherDataGUi:
         self.enter_data_button = Button(self.get_data_frame, text="Enter Data", command=self.enter_data)
         self.enter_data_button.grid(column=0, row=5, columnspan=2)
 
-    def display(self):
-        pass
+        self.display_label = Label(self.display_data_frame, text="Displaying Person Data")
+        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=self.switch_to_add)
+        self.display_label.grid(column=0, row=0)
+        self.add_data_button.grid(column=1, row=0)
+
+        self.name_display_label = Label(self.display_data_frame, text="First name:")
+        self.name_display = Label(self.display_data_frame, textvariable=self.current_name)
+        self.name_display_label.grid(column=0, row=1)
+        self.name_display.grid(column=1, row=1)
+
+        self.age_display_label = Label(self.display_data_frame, text="Age:")
+        self.age_display = Label(self.display_data_frame, textvariable=self.current_age)
+        self.age_display_label.grid(column=0, row=2)
+        self.age_display.grid(column=1, row=2)
+
+        self.has_phone_label = Label(self.display_data_frame, text="__ has a mobile phone.")
+        self.has_phone_label.grid(column=0, row=3, columnspan=2)
+
+        self.previous_button = Button(self.display_data_frame, text="Previous", command=lambda: self.change_display(-1))
+        self.next_button = Button(self.display_data_frame, text="Next", command=lambda: self.change_display(1))
+        self.previous_button.grid(column=0, row=4)
+        self.next_button.grid(column=1, row=4)
+    
+    def switch_to_display(self):
+        self.get_data_frame.pack_forget()
+        self.display_data_frame.pack()
+
+    def switch_to_add(self):
+        self.display_data_frame.pack_forget()
+        self.get_data_frame.pack()
 
     def enter_data(self):
+        pass
+
+    def change_display(self, amount):
         pass
 
 if __name__ == "__main__":
