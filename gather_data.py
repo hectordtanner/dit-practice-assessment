@@ -113,6 +113,16 @@ class GatherDataGUi:
         else:
             self.has_phone_label.configure(text=f"{self.people[self.list_pos].name} does not have a phone.")
     
+    def disable_buttons(self):
+        if self.name_entry.get() == "" or self.age_entry.get() <= 0:
+            self.enter_data_button.configure(state="disabled")
+        else:
+            self.enter_data_button.configure(state="active")
+        if len(self.people) == 0:
+            self.display_button.configure(state="disabled")    
+        else:
+            self.display_button.configure(state="active") 
+
 
 if __name__ == "__main__":
     root = Tk()
