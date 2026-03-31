@@ -7,7 +7,11 @@ class Person:
         self.has_phone = has_phone
 
 class GatherDataGUi:
+    """Creates the looks and functionality of the GUI."""
+
+
     def __init__(self, parent):
+        """Creates all GUI elements"""
         self.current_name = StringVar()
         self.current_age = IntVar()
         self.current_has_phone = BooleanVar()
@@ -45,7 +49,7 @@ class GatherDataGUi:
         self.enter_data_button.grid(column=0, row=5, columnspan=2)
 
         self.display_label = Label(self.display_data_frame, text="Displaying Person Data")
-        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=self.switch_to_add)
+        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=self.switch_to_data)
         self.display_label.grid(column=0, row=0)
         self.add_data_button.grid(column=1, row=0)
 
@@ -67,31 +71,41 @@ class GatherDataGUi:
         self.previous_button.grid(column=0, row=4)
         self.next_button.grid(column=1, row=4)
     
+
     def switch_to_display(self):
+        """Switches from data frame display frame"""
         self.get_data_frame.pack_forget()
         self.display_data_frame.pack()
         self.list_pos = 0
         self.update_display()
 
-    def switch_to_add(self):
+
+    def switch_to_data(self):
+        """Switches from data frame display frame"""
         self.display_data_frame.pack_forget()
         self.get_data_frame.pack()
 
+
     def enter_data(self):
+        """Adds the input data to the people list (as a Person object)"""
         self.people.append(Person(self.name_entry.get(), self.age_entry.get(), self.current_has_phone.get()))
         self.age_entry.delete(0, END)
         self.name_entry.delete(0, END)
         self.current_has_phone.set(False)
 
+
     def change_list_pos(self, amount):
+        """Changes the list position by amount, looping if it excedes the length of the people list"""
         self.list_pos += amount
         while self.list_pos < 0:
             self.list_pos += len(self.people)
         while self.list_pos >= len(self.people):
             self.list_pos -= len(self.people)
         self.update_display()
-        
+
+
     def update_display(self):
+        """Updates the labels on the display frame"""
         self.name_display.configure(text=self.people[self.list_pos].name)
         self.age_display.configure(text=self.people[self.list_pos].age)
         if self.people[self.list_pos].has_phone:
@@ -99,6 +113,7 @@ class GatherDataGUi:
         else:
             self.has_phone_label.configure(text=f"{self.people[self.list_pos].name} does not have a phone.")
     
+
 if __name__ == "__main__":
     root = Tk()
     gui = GatherDataGUi(root)
