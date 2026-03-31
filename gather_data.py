@@ -12,6 +12,7 @@ class GatherDataGUi:
         self.current_age = IntVar()
         self.current_has_phone = BooleanVar()
         self.current_has_phone.set(False)
+        self.people = []
         self.list_pos = 0
 
         self.get_data_frame = Frame(parent)
@@ -75,7 +76,7 @@ class GatherDataGUi:
         self.get_data_frame.pack()
 
     def enter_data(self):
-        print(f"Name: {self.current_name.get()} Age: {self.current_age.get()} Phone: {self.current_has_phone.get()}")
+        self.people.append(Person(self.name_entry.get(), self.age_entry.get(), self.current_has_phone.get()))
 
     def change_display(self, amount):
         print(f"moved {amount} through list")
