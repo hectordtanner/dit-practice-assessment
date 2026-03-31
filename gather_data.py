@@ -74,7 +74,7 @@ class GatherDataGUi:
         self.get_data_frame.pack()
 
     def enter_data(self):
-        pass
+        print(f"Name: {self.name_entry.get()} Age: {self.age_entry.get()} Phone: {self.current_has_phone.get()}")
 
     def change_display(self, amount):
         pass
