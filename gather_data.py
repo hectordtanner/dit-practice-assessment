@@ -12,6 +12,7 @@ class GatherDataGUi:
         self.current_age = IntVar()
         self.current_has_phone = BooleanVar()
         self.current_has_phone.set(False)
+        self.list_pos = 0
 
         self.get_data_frame = Frame(parent)
         self.display_data_frame = Frame(parent)
@@ -23,12 +24,12 @@ class GatherDataGUi:
         self.display_button.grid(column=1, row=0)
 
         self.name_entry_label = Label(self.get_data_frame, text="First name:")
-        self.name_entry = Entry(self.get_data_frame)
+        self.name_entry = Entry(self.get_data_frame, textvariable=self.current_name)
         self.name_entry_label.grid(column=0, row=1)
         self.name_entry.grid(column=1, row=1)
 
         self.age_entry_label = Label(self.get_data_frame, text="Age:")
-        self.age_entry = Entry(self.get_data_frame)
+        self.age_entry = Entry(self.get_data_frame, textvariable=self.current_age)
         self.age_entry_label.grid(column=0, row=2)
         self.age_entry.grid(column=1, row=2)
 
@@ -74,10 +75,10 @@ class GatherDataGUi:
         self.get_data_frame.pack()
 
     def enter_data(self):
-        print(f"Name: {self.name_entry.get()} Age: {self.age_entry.get()} Phone: {self.current_has_phone.get()}")
+        print(f"Name: {self.current_name.get()} Age: {self.current_age.get()} Phone: {self.current_has_phone.get()}")
 
     def change_display(self, amount):
-        pass
+        print(f"moved {amount} through list")
 
 if __name__ == "__main__":
     root = Tk()
