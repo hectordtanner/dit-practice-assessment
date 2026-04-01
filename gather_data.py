@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 
 class Person:
     def __init__(self, name: str, age: int, has_phone: bool):
@@ -10,65 +10,65 @@ class GatherDataGUi:
     """Creates the looks and functionality of the GUI."""
 
 
-    def __init__(self, parent: Tk):
+    def __init__(self, parent: tk.Tk):
         """Creates all GUI elements"""
-        self.current_has_phone = BooleanVar()
+        self.current_has_phone = tk.BooleanVar()
         self.current_has_phone.set(False)
         self.people = []
         self.display_pos = 0
 
-        self.get_data_frame = Frame(parent)
-        self.display_data_frame = Frame(parent)
+        self.get_data_frame = tk.Frame(parent)
+        self.display_data_frame = tk.Frame(parent)
         self.get_data_frame.pack()
 
-        self.add_data_label = Label(self.get_data_frame, text="Collecting Person Data")
-        self.display_button = Button(self.get_data_frame, text="Show All", command=lambda: self.switch_frame(True), state="disabled")
+        self.add_data_label = tk.Label(self.get_data_frame, text="Collecting Person Data")
+        self.display_button = tk.Button(self.get_data_frame, text="Show All", command=lambda: self.switch_frame(True), state="disabled")
         self.add_data_label.grid(column=0, row=0)
         self.display_button.grid(column=1, row=0)
 
-        self.name_entry_label = Label(self.get_data_frame, text="First name:")
-        self.name_entry = Entry(self.get_data_frame)
+        self.name_entry_label = tk.Label(self.get_data_frame, text="First name:")
+        self.name_entry = tk.Entry(self.get_data_frame)
         self.name_entry.bind("<KeyRelease>", self.disable_buttons)
         self.name_entry_label.grid(column=0, row=1)
         self.name_entry.grid(column=1, row=1)
 
-        self.age_entry_label = Label(self.get_data_frame, text="Age:")
-        self.age_entry = Entry(self.get_data_frame)
+        self.age_entry_label = tk.Label(self.get_data_frame, text="Age:")
+        self.age_entry = tk.Entry(self.get_data_frame)
         self.age_entry.insert(0, "0")
         self.age_entry.bind("<KeyRelease>", self.disable_buttons)
         self.age_entry_label.grid(column=0, row=2)
         self.age_entry.grid(column=1, row=2)
 
-        self.has_phone_buttons_label = Label(self.get_data_frame, text="Do you have a mobile phone?")
-        self.has_phone_yes = Radiobutton(self.get_data_frame, text="Yes", variable=self.current_has_phone, value=True)
-        self.has_phone_no = Radiobutton(self.get_data_frame, text="No", variable=self.current_has_phone, value=False)
+        self.has_phone_buttons_label = tk.Label(self.get_data_frame, text="Do you have a mobile phone?")
+        self.has_phone_yes = tk.Radiobutton(self.get_data_frame, text="Yes", variable=self.current_has_phone, value=True)
+        self.has_phone_no = tk.Radiobutton(self.get_data_frame, text="No", variable=self.current_has_phone, value=False)
         self.has_phone_buttons_label.grid(column=0, row=3, rowspan=2)
         self.has_phone_yes.grid(column=1, row=3)
         self.has_phone_no.grid(column=1, row=4)
 
-        self.enter_data_button = Button(self.get_data_frame, text="Enter Data", command=self.enter_data, state="disabled")
+        self.enter_data_button = tk.Button(self.get_data_frame, text="Enter Data", command=self.enter_data, state="disabled")
         self.enter_data_button.grid(column=0, row=5, columnspan=2)
 
-        self.display_label = Label(self.display_data_frame, text="Displaying Person Data")
-        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=lambda: self.switch_frame(False))
+        self.display_label = tk.Label(self.display_data_frame, text="Displaying Person Data")
+        self.add_data_button = tk.Button(self.display_data_frame, text="Add New Person", command=lambda: self.switch_frame(False))
         self.display_label.grid(column=0, row=0)
         self.add_data_button.grid(column=1, row=0)
 
-        self.name_display_label = Label(self.display_data_frame, text="First name:")
-        self.name_display = Label(self.display_data_frame, text="")
+        self.name_display_label = tk.Label(self.display_data_frame, text="First name:")
+        self.name_display = tk.Label(self.display_data_frame, text="")
         self.name_display_label.grid(column=0, row=1)
         self.name_display.grid(column=1, row=1)
 
-        self.age_display_label = Label(self.display_data_frame, text="Age:")
-        self.age_display = Label(self.display_data_frame, text="")
+        self.age_display_label = tk.Label(self.display_data_frame, text="Age:")
+        self.age_display = tk.Label(self.display_data_frame, text="")
         self.age_display_label.grid(column=0, row=2)
         self.age_display.grid(column=1, row=2)
 
-        self.has_phone_label = Label(self.display_data_frame, text="")
+        self.has_phone_label = tk.Label(self.display_data_frame, text="")
         self.has_phone_label.grid(column=0, row=3, columnspan=2)
 
-        self.previous_button = Button(self.display_data_frame, text="Previous", command=lambda: self.change_display_pos(-1))
-        self.next_button = Button(self.display_data_frame, text="Next", command=lambda: self.change_display_pos(1))
+        self.previous_button = tk.Button(self.display_data_frame, text="Previous", command=lambda: self.change_display_pos(-1))
+        self.next_button = tk.Button(self.display_data_frame, text="Next", command=lambda: self.change_display_pos(1))
         self.previous_button.grid(column=0, row=4)
         self.next_button.grid(column=1, row=4)
     
@@ -88,9 +88,9 @@ class GatherDataGUi:
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
         self.people.append(Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get()))
-        self.age_entry.delete(0, END)
+        self.age_entry.delete(0, tk.END)
         self.age_entry.insert(0, "0")
-        self.name_entry.delete(0, END)
+        self.name_entry.delete(0, tk.END)
         self.current_has_phone.set(False)
         self.disable_buttons("")
 
@@ -132,6 +132,6 @@ class GatherDataGUi:
 
 
 if __name__ == "__main__":
-    root = Tk()
+    root = tk.Tk()
     gui = GatherDataGUi(root)
     root.mainloop()
