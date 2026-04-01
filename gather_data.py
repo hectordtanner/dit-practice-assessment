@@ -89,7 +89,7 @@ class GatherDataGUi:
 
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
-        self.people.append(Person(self.name_entry.get(), self.age_entry.get(), self.current_has_phone.get()))
+        self.people.append(Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get()))
         self.age_entry.delete(0, END)
         self.age_entry.insert(0, "0")
         self.name_entry.delete(0, END)
@@ -118,10 +118,14 @@ class GatherDataGUi:
     
     def disable_buttons(self, arg):
         """Disables buttons that shouldn't be active"""
-        if self.name_entry.get() == "" or int(self.age_entry.get()) <= 0:
+        try:
+            if self.name_entry.get() == "" or int(self.age_entry.get()) <= 0:
+                self.enter_data_button.configure(state="disabled")
+            else:
+                self.enter_data_button.configure(state="active")
+        except ValueError:
             self.enter_data_button.configure(state="disabled")
-        else:
-            self.enter_data_button.configure(state="active")
+        
         if len(self.people) == 0:
             self.display_button.configure(state="disabled")    
         else:
