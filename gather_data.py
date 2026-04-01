@@ -1,7 +1,7 @@
 from tkinter import *
 
 class Person:
-    def __init__(self, name, age, has_phone):
+    def __init__(self, name: str, age: int, has_phone: bool):
         self.name = name
         self.age = age
         self.has_phone = has_phone
@@ -10,7 +10,7 @@ class GatherDataGUi:
     """Creates the looks and functionality of the GUI."""
 
 
-    def __init__(self, parent):
+    def __init__(self, parent: Tk):
         """Creates all GUI elements"""
         self.current_has_phone = BooleanVar()
         self.current_has_phone.set(False)
@@ -22,7 +22,7 @@ class GatherDataGUi:
         self.get_data_frame.pack()
 
         self.add_data_label = Label(self.get_data_frame, text="Collecting Person Data")
-        self.display_button = Button(self.get_data_frame, text="Show All", command=self.switch_to_display, state="disabled")
+        self.display_button = Button(self.get_data_frame, text="Show All", command=lambda: self.switch_frame(True), state="disabled")
         self.add_data_label.grid(column=0, row=0)
         self.display_button.grid(column=1, row=0)
 
@@ -50,7 +50,7 @@ class GatherDataGUi:
         self.enter_data_button.grid(column=0, row=5, columnspan=2)
 
         self.display_label = Label(self.display_data_frame, text="Displaying Person Data")
-        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=self.switch_to_data)
+        self.add_data_button = Button(self.display_data_frame, text="Add New Person", command=lambda: self.switch_frame(False))
         self.display_label.grid(column=0, row=0)
         self.add_data_button.grid(column=1, row=0)
 
@@ -73,18 +73,16 @@ class GatherDataGUi:
         self.next_button.grid(column=1, row=4)
     
 
-    def switch_to_display(self):
-        """Switches from data frame display frame"""
-        self.get_data_frame.pack_forget()
-        self.display_data_frame.pack()
-        self.display_pos = 0
-        self.update_display()
-
-
-    def switch_to_data(self):
-        """Switches from data frame display frame"""
-        self.display_data_frame.pack_forget()
-        self.get_data_frame.pack()
+    def switch_frame(self, to_display: bool):
+        """Switches from data frame to display frame and vice versa"""
+        if to_display:
+            self.get_data_frame.pack_forget()
+            self.display_data_frame.pack()
+            self.display_pos = 0
+            self.update_display()
+        else:
+            self.display_data_frame.pack_forget()
+            self.get_data_frame.pack()
 
 
     def enter_data(self):
@@ -97,7 +95,7 @@ class GatherDataGUi:
         self.disable_buttons("")
 
 
-    def change_display_pos(self, amount):
+    def change_display_pos(self, amount: int):
         """Changes the list position by amount, looping if it excedes the length of the people list"""
         self.display_pos += amount
         while self.display_pos < 0:
@@ -116,6 +114,7 @@ class GatherDataGUi:
         else:
             self.has_phone_label.configure(text=f"{self.people[self.display_pos].name} does not have a phone.")
     
+
     def disable_buttons(self, arg):
         """Disables buttons that shouldn't be active"""
         try:
@@ -129,8 +128,7 @@ class GatherDataGUi:
         if len(self.people) == 0:
             self.display_button.configure(state="disabled")    
         else:
-            self.display_button.configure(state="active") 
-        print(arg)
+            self.display_button.configure(state="active")
 
 
 if __name__ == "__main__":
