@@ -90,14 +90,15 @@ class GatherDataGUi:
 
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
-        self.people.append(Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get()))
+        person = Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get())
+        self.add_data(f"{person.name} {person.age} {person.has_phone}")
+        self.people.append(person)
         self.age_entry.delete(0, tk.END)
         self.age_entry.insert(0, "0")
         self.name_entry.delete(0, tk.END)
         self.current_has_phone.set(False)
         self.disable_buttons("")
         
-
 
     def change_display_pos(self, amount: int):
         """Changes the list position by amount, looping if it excedes the length of the people list"""
@@ -140,7 +141,7 @@ class GatherDataGUi:
             imported:list[str] = file.read().splitlines()
         
         for person in imported:
-            person_data = Person(person.split()[0], int(person.split()[1]), False)
+            person_data = Person(person.split()[0], int(person.split()[1]), False)                
             if person.split()[2] == "True":
                 person_data.has_phone = True
             self.people.append(person_data)
@@ -148,7 +149,7 @@ class GatherDataGUi:
 
     def add_data(self, data):
         with open("people_data.txt", "a") as file:
-            file.write(data)
+            file.write(f"\n{data}")
 
 
 if __name__ == "__main__":

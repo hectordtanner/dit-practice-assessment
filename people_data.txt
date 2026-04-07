@@ -1,2 +1,2 @@
-Joe 2 True
-Marge 1 False
+joe 8 True
+bob 8 False
