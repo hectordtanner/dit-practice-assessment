@@ -1,22 +1,26 @@
 import tkinter as tk
 from tkinter import messagebox
 
+
 class Person:
     def __init__(self, name: str, age: int, has_phone: bool):
         self.name = name
         self.age = age
         self.has_phone = has_phone
     
+
     def data_string(self):
         """Formats data into a string for external storage"""
         return (f"{self.name}|{self.age}|{self.has_phone}")
     
+
     def has_phone_string(self):
         """Formats phone data"""
         if self.has_phone:
             return f"{self.name} has a phone."
         else:
             return f"{self.name} does not have a phone."
+
 
 class GatherDataGUi:
     """Creates the looks and functionality of the GUI."""
