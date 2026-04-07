@@ -5,6 +5,10 @@ class Person:
         self.name = name
         self.age = age
         self.has_phone = has_phone
+    
+    def data_string(self):
+        """Formats data into a string for external storage"""
+        return (f"{self.name} {self.age} {self.has_phone}")
 
 class GatherDataGUi:
     """Creates the looks and functionality of the GUI."""
@@ -91,7 +95,7 @@ class GatherDataGUi:
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
         person = Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get())
-        self.add_data(f"{person.name} {person.age} {person.has_phone}")
+        self.add_data(person.data_string())
         self.people.append(person)
         self.age_entry.delete(0, tk.END)
         self.age_entry.insert(0, "0")
@@ -137,19 +141,31 @@ class GatherDataGUi:
     
 
     def import_data(self):
+        """Imports data from a file"""
         with open("people_data.txt", "r") as file:
             imported:list[str] = file.read().splitlines()
         
-        for person in imported:
-            person_data = Person(person.split()[0], int(person.split()[1]), False)                
-            if person.split()[2] == "True":
-                person_data.has_phone = True
-            self.people.append(person_data)
+        person = Person("", 0, False)
+        for person_data in imported:
+            person = Person(person_data.split()[0], int(person_data.split()[1]), False)                
+            if person_data.split()[2] == "True":
+                person.has_phone = True
+
+            if not self.duplicate_check(person):
+                self.people.append(person)
 
 
     def add_data(self, data):
+        """Adds data to a file"""
         with open("people_data.txt", "a") as file:
             file.write(f"\n{data}")
+
+    
+    def duplicate_check(self, check: Person):
+        for person in self.people:
+            if person.data_string == check.data_string():
+                return True
+        return False
 
 
 if __name__ == "__main__":
