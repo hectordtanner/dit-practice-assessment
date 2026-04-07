@@ -28,14 +28,18 @@ class GatherDataGUi:
 
     def __init__(self, parent: tk.Tk):
         """Creates all GUI elements"""
+        parent.pack_propagate(False) 
+    
         self.current_has_phone = tk.BooleanVar()
         self.current_has_phone.set(False)
         self.people: list[Person] = []
         self.display_pos = 0
-
-        self.get_data_frame = tk.Frame(parent)
-        self.display_data_frame = tk.Frame(parent)
-        self.get_data_frame.pack()
+    
+        self.get_data_frame = tk.Frame(parent, width=500, height=200)
+        self.display_data_frame = tk.Frame(parent, width=500, height=200)
+        self.get_data_frame.pack_propagate(False)
+        self.display_data_frame.pack_propagate(False)
+        self.get_data_frame.pack(fill="both", expand=True)
 
         self.add_data_label = tk.Label(self.get_data_frame, text="Collecting Person Data")
         self.display_button = tk.Button(self.get_data_frame, text="Show All", command=lambda: self.switch_frame(True), state="disabled")
@@ -90,26 +94,35 @@ class GatherDataGUi:
 
         self.import_data_button = tk.Button(self.display_data_frame, text="Import Data", command=lambda: self.import_data(self.people, self.people))
         self.export_data_button = tk.Button(self.display_data_frame, text="Export Data", command=lambda: self.export_data(self.people))
-        self.import_data_button.grid(column=0, row=5, columnspan=2)
-    
+        self.import_data_button.grid(column=0, row=5)
+        self.export_data_button.grid(column=1, row=5)
+
+        for g_x in range(2):
+            self.get_data_frame.columnconfigure(g_x, weight=1)
+        for g_y in range(6):
+            self.get_data_frame.rowconfigure(g_y, weight=1)
+        for d_x in range(2):
+            self.display_data_frame.columnconfigure(d_x, weight=1)
+        for d_y in range(6):
+            self.display_data_frame.rowconfigure(d_y, weight=1)
+
 
     def switch_frame(self, to_display: bool):
         """Switches from data frame to display frame and vice versa"""
         if to_display:
             self.get_data_frame.pack_forget()
-            self.display_data_frame.pack()
+            self.display_data_frame.pack(fill="both", expand=True)
             self.display_pos = 0
             self.update_display()
         else:
             self.display_data_frame.pack_forget()
-            self.get_data_frame.pack()
+            self.get_data_frame.pack(fill="both", expand=True)
 
 
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
         person = Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get())
         if not self.check_duplicate(person.name, self.people):
-            self.add_data(person.data_string())
             self.people.append(person)
         else:
             messagebox.showerror(title="Duplicate", message="Name already in database")
@@ -194,5 +207,7 @@ class GatherDataGUi:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.title("Personal Data")
+    root.geometry("500x200")
     gui = GatherDataGUi(root)
     root.mainloop()
