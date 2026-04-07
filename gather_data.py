@@ -14,7 +14,7 @@ class GatherDataGUi:
         """Creates all GUI elements"""
         self.current_has_phone = tk.BooleanVar()
         self.current_has_phone.set(False)
-        self.people = []
+        self.people: list[Person] = []
         self.display_pos = 0
 
         self.get_data_frame = tk.Frame(parent)
@@ -71,6 +71,9 @@ class GatherDataGUi:
         self.next_button = tk.Button(self.display_data_frame, text="Next", command=lambda: self.change_display_pos(1))
         self.previous_button.grid(column=0, row=4)
         self.next_button.grid(column=1, row=4)
+
+        self.import_data_button = tk.Button(self.display_data_frame, text="Import Data", command=self.import_data)
+        self.import_data_button.grid(column=0, row=5, columnspan=2)
     
 
     def switch_frame(self, to_display: bool):
@@ -93,6 +96,7 @@ class GatherDataGUi:
         self.name_entry.delete(0, tk.END)
         self.current_has_phone.set(False)
         self.disable_buttons("")
+        
 
 
     def change_display_pos(self, amount: int):
@@ -129,6 +133,22 @@ class GatherDataGUi:
             self.display_button.configure(state="disabled")    
         else:
             self.display_button.configure(state="active")
+    
+
+    def import_data(self):
+        with open("people_data.txt", "r") as file:
+            imported:list[str] = file.read().splitlines()
+        
+        for person in imported:
+            person_data = Person(person.split()[0], int(person.split()[1]), False)
+            if person.split()[2] == "True":
+                person_data.has_phone = True
+            self.people.append(person_data)
+
+
+    def add_data(self, data):
+        with open("people_data.txt", "a") as file:
+            file.write(data)
 
 
 if __name__ == "__main__":
