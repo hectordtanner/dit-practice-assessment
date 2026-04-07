@@ -1,5 +1,2 @@
 joe 8 True
-bob 8 False
-no 2 True
-no 2 False
-no 2 True
+4 4 True

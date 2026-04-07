@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class Person:
     def __init__(self, name: str, age: int, has_phone: bool):
@@ -8,7 +9,14 @@ class Person:
     
     def data_string(self):
         """Formats data into a string for external storage"""
-        return (f"{self.name} {self.age} {self.has_phone}")
+        return (f"{self.name}|{self.age}|{self.has_phone}")
+    
+    def has_phone_string(self):
+        """Formats phone data"""
+        if self.has_phone:
+            return f"{self.name} has a phone."
+        else:
+            return f"{self.name} does not have a phone."
 
 class GatherDataGUi:
     """Creates the looks and functionality of the GUI."""
@@ -76,7 +84,8 @@ class GatherDataGUi:
         self.previous_button.grid(column=0, row=4)
         self.next_button.grid(column=1, row=4)
 
-        self.import_data_button = tk.Button(self.display_data_frame, text="Import Data", command=self.import_data)
+        self.import_data_button = tk.Button(self.display_data_frame, text="Import Data", command=lambda: self.import_data(self.people, self.people))
+        self.export_data_button = tk.Button(self.display_data_frame, text="Export Data", command=lambda: self.export_data(self.people))
         self.import_data_button.grid(column=0, row=5, columnspan=2)
     
 
@@ -95,8 +104,11 @@ class GatherDataGUi:
     def enter_data(self):
         """Adds the input data to the people list (as a Person object)"""
         person = Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get())
-        self.add_data(person.data_string())
-        self.people.append(person)
+        if not self.check_duplicate(person.name, self.people):
+            self.add_data(person.data_string())
+            self.people.append(person)
+        else:
+            messagebox.showerror(title="Duplicate", message="Name already in database")
         self.age_entry.delete(0, tk.END)
         self.age_entry.insert(0, "0")
         self.name_entry.delete(0, tk.END)
@@ -127,7 +139,7 @@ class GatherDataGUi:
     def disable_buttons(self, arg):
         """Disables buttons that shouldn't be active"""
         try:
-            if self.name_entry.get() == "" or int(self.age_entry.get()) <= 0:
+            if self.name_entry.get() == "" or int(self.age_entry.get()) <= 0 or "|" in self.name_entry.get():
                 self.enter_data_button.configure(state="disabled")
             else:
                 self.enter_data_button.configure(state="active")
@@ -140,19 +152,26 @@ class GatherDataGUi:
             self.display_button.configure(state="active")
     
 
-    def import_data(self):
+    def import_data(self, import_loc: list[Person], exclude: list[Person]):
         """Imports data from a file"""
         with open("people_data.txt", "r") as file:
             imported:list[str] = file.read().splitlines()
         
-        person = Person("", 0, False)
         for person_data in imported:
-            person = Person(person_data.split()[0], int(person_data.split()[1]), False)                
-            if person_data.split()[2] == "True":
-                person.has_phone = True
+            if len(person_data.split("|")) == 3:
+                person = Person(person_data.split("|")[0], int(person_data.split("|")[1]), False)                
+                if person_data.split("|")[2] == "True":
+                    person.has_phone = True
 
-            if not self.duplicate_check(person):
-                self.people.append(person)
+                if not self.check_duplicate(person.name, exclude):    
+                    import_loc.append(person)
+
+
+    def check_duplicate(self, name: str, check_against:list[Person]):
+        for p in check_against:
+            if p.name == name:
+                return True
+        return False
 
 
     def add_data(self, data):
@@ -160,12 +179,13 @@ class GatherDataGUi:
         with open("people_data.txt", "a") as file:
             file.write(f"\n{data}")
 
-    
-    def duplicate_check(self, check: Person):
-        for person in self.people:
-            if person.data_string == check.data_string():
-                return True
-        return False
+
+    def export_data(self, data: list[Person]):
+        checking_list = []
+        self.import_data(checking_list, [])
+        for new_person in data:
+            if not self.check_duplicate(new_person.name, checking_list):
+                self.add_data(new_person.data_string())
 
 
 if __name__ == "__main__":
