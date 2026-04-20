@@ -185,6 +185,7 @@ class GatherDataGUi:
 
 
     def check_duplicate(self, name: str, check_against:list[Person]):
+        "Checks if a person with the specified name is in check_against"
         for p in check_against:
             if p.name == name:
                 return True
@@ -198,6 +199,7 @@ class GatherDataGUi:
 
 
     def export_data(self, data: list[Person]):
+        """Exports data to a file"""
         checking_list = []
         self.import_data(checking_list, [])
         for new_person in data:
