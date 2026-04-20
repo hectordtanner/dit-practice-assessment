@@ -3,19 +3,20 @@ from tkinter import messagebox
 
 
 class Person:
+    """Store data of a single person."""
+
     def __init__(self, name: str, age: int, has_phone: bool):
+        """Create variables to store data."""
         self.name = name
         self.age = age
         self.has_phone = has_phone
-    
 
     def data_string(self):
-        """Formats data into a string for external storage"""
+        """Format data into a string for external storage."""
         return (f"{self.name}|{self.age}|{self.has_phone}")
-    
 
     def has_phone_string(self):
-        """Formats phone data"""
+        """Format phone data."""
         if self.has_phone:
             return f"{self.name} has a phone."
         else:
@@ -23,18 +24,17 @@ class Person:
 
 
 class GatherDataGUi:
-    """Creates the looks and functionality of the GUI."""
-
+    """Create the looks and functionality of the GUI."""
 
     def __init__(self, parent: tk.Tk):
-        """Creates all GUI elements"""
-        parent.pack_propagate(False) 
-    
+        """Create all GUI elements."""
+        parent.pack_propagate(False)
+
         self.current_has_phone = tk.BooleanVar()
         self.current_has_phone.set(False)
         self.people: list[Person] = []
         self.display_pos = 0
-    
+
         self.get_data_frame = tk.Frame(parent, width=500, height=200)
         self.display_data_frame = tk.Frame(parent, width=500, height=200)
         self.get_data_frame.pack_propagate(False)
@@ -106,9 +106,8 @@ class GatherDataGUi:
         for d_y in range(6):
             self.display_data_frame.rowconfigure(d_y, weight=1)
 
-
     def switch_frame(self, to_display: bool):
-        """Switches from data frame to display frame and vice versa"""
+        """Switch from data frame to display frame and vice versa."""
         if to_display:
             self.get_data_frame.pack_forget()
             self.display_data_frame.pack(fill="both", expand=True)
@@ -118,9 +117,8 @@ class GatherDataGUi:
             self.display_data_frame.pack_forget()
             self.get_data_frame.pack(fill="both", expand=True)
 
-
     def enter_data(self):
-        """Adds the input data to the people list (as a Person object)"""
+        """Add the input data to the people list (as a Person object)."""
         person = Person(self.name_entry.get(), int(self.age_entry.get()), self.current_has_phone.get())
         if not self.check_duplicate(person.name, self.people):
             self.people.append(person)
@@ -131,10 +129,9 @@ class GatherDataGUi:
         self.name_entry.delete(0, tk.END)
         self.current_has_phone.set(False)
         self.disable_buttons("")
-        
 
     def change_display_pos(self, amount: int):
-        """Changes the list position by amount, looping if it excedes the length of the people list"""
+        """Change the list position by amount, looping if it excedes the length of the people list."""
         self.display_pos += amount
         while self.display_pos < 0:
             self.display_pos += len(self.people)
@@ -142,19 +139,17 @@ class GatherDataGUi:
             self.display_pos -= len(self.people)
         self.update_display()
 
-
     def update_display(self):
-        """Updates the labels on the display frame"""
+        """Update the labels on the display frame."""
         self.name_display.configure(text=self.people[self.display_pos].name)
         self.age_display.configure(text=self.people[self.display_pos].age)
         if self.people[self.display_pos].has_phone:
             self.has_phone_label.configure(text=f"{self.people[self.display_pos].name} has a phone.")
         else:
             self.has_phone_label.configure(text=f"{self.people[self.display_pos].name} does not have a phone.")
-    
 
     def disable_buttons(self, arg):
-        """Disables buttons that shouldn't be active"""
+        """Disable buttons that shouldn't be active."""
         try:
             if self.name_entry.get() == "" or int(self.age_entry.get()) <= 0 or "|" in self.name_entry.get():
                 self.enter_data_button.configure(state="disabled")
@@ -162,44 +157,40 @@ class GatherDataGUi:
                 self.enter_data_button.configure(state="active")
         except ValueError:
             self.enter_data_button.configure(state="disabled")
-        
+
         if len(self.people) == 0:
-            self.display_button.configure(state="disabled")    
+            self.display_button.configure(state="disabled")
         else:
             self.display_button.configure(state="active")
-    
 
     def import_data(self, import_loc: list[Person], exclude: list[Person]):
-        """Imports data from a file"""
+        """Import data from a file."""
         with open("people_data.txt", "r") as file:
-            imported:list[str] = file.read().splitlines()
-        
+            imported: list[str] = file.read().splitlines()
+
         for person_data in imported:
             if len(person_data.split("|")) == 3:
-                person = Person(person_data.split("|")[0], int(person_data.split("|")[1]), False)                
+                person = Person(person_data.split("|")[0], int(person_data.split("|")[1]), False)
                 if person_data.split("|")[2] == "True":
                     person.has_phone = True
 
-                if not self.check_duplicate(person.name, exclude):    
+                if not self.check_duplicate(person.name, exclude):
                     import_loc.append(person)
 
-
-    def check_duplicate(self, name: str, check_against:list[Person]):
-        "Checks if a person with the specified name is in check_against"
+    def check_duplicate(self, name: str, check_against: list[Person]):
+        """Check if a person with the specified name is in check_against."""
         for p in check_against:
             if p.name == name:
                 return True
         return False
 
-
     def add_data(self, data):
-        """Adds data to a file"""
+        """Add data to a file."""
         with open("people_data.txt", "a") as file:
             file.write(f"\n{data}")
 
-
     def export_data(self, data: list[Person]):
-        """Exports data to a file"""
+        """Export data to a file."""
         checking_list = []
         self.import_data(checking_list, [])
         for new_person in data:
